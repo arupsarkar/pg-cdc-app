@@ -35,6 +35,7 @@ public class SfdcAsyncApplication {
 			return "home";
 		}catch (Exception ex) {
 			model.put("schema", "Error - " + connSchema);
+			LOG.error("Application Error", ex.getCause());
 			return "home";
 		}
 	}

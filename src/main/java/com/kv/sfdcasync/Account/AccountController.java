@@ -64,7 +64,9 @@ public class AccountController {
                 records.add(acct1);
             }
         }catch (Exception ex) {
-
+            String error = ex.getLocalizedMessage();
+            LOG.error("Error", error);
+            LOG.debug("Debug", ex.getMessage());
         }
         return records;        
     }
