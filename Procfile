@@ -1,0 +1,1 @@
+web: java -jar target/sfdc-async-0.0.1-SNAPSHOT.jar

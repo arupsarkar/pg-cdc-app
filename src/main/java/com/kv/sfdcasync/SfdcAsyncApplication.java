@@ -1,11 +1,5 @@
 package com.kv.sfdcasync;
 
-import java.util.ArrayList;
-import java.util.Map;
-
-import com.kv.sfdcasync.Account.Account;
-import com.kv.sfdcasync.Account.AccountController;
-
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
