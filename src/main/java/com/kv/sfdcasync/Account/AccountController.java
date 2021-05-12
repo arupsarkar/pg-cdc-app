@@ -63,6 +63,8 @@ public class AccountController {
                 Account acct1 = AccountConfig.account(rs.getString("Id"), rs.getString("Name"));
                 records.add(acct1);
             }
+            rs.close();
+            stmt.close();
         }catch (Exception ex) {
             String error = ex.getLocalizedMessage();
             LOG.error("Error", error);
