@@ -3,13 +3,20 @@ package com.kv.sfdcasync.Account;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Map;
 
+import javax.sql.DataSource;
+
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
@@ -55,12 +62,11 @@ public class AccountController {
     private ArrayList<Account> getAccounts() {
         ArrayList<Account> records = new ArrayList<Account>();        
         try {
-			Class.forName("org.postgresql.Driver");
-			Connection conn = DriverManager.getConnection(dbUrl);
+			Connection conn = dataSource().getConnection();
             Statement stmt = conn.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT Id, Name FROM salesforce.account");
+            ResultSet rs = stmt.executeQuery("SELECT id, name FROM salesforce.account");
             while(rs.next()) {
-                Account acct1 = AccountConfig.account(rs.getString("Id"), rs.getString("Name"));
+                Account acct1 = AccountConfig.account(rs.getString("Id"), rs.getString("name"));
                 records.add(acct1);
             }
             rs.close();
@@ -72,4 +78,16 @@ public class AccountController {
         }
         return records;        
     }
+
+    @Bean
+    public DataSource dataSource() throws SQLException {
+        if(dbUrl == null || dbUrl.isEmpty()) {
+            return new HikariDataSource();
+        } else {
+            HikariConfig config = new HikariConfig();
+            config.setJdbcUrl(dbUrl);
+            return new HikariDataSource(config);
+        }
+    }
+
 }
