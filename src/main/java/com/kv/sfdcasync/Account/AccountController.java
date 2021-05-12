@@ -1,10 +1,15 @@
 package com.kv.sfdcasync.Account;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
@@ -12,6 +17,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class AccountController {
     private static final Logger LOG = LoggerFactory.getLogger(AccountController.class);
     ArrayList<Account> records = new ArrayList<Account>();
+	@Value("${spring.datasource.url")
+	private String dbUrl;    
 
     @GetMapping("/account")
     String account(Map<String, ArrayList<Account>> model) {
@@ -22,7 +29,8 @@ public class AccountController {
     public AccountController() {
         LOG.debug("Initiating account controller.");
         LOG.debug("Fetching account records");
-        this.records = createAccounts();
+        //this.records = createAccounts();
+        this.records = getAccounts();
         LOG.debug("Total accoun records fetched", this.records.size());
         LOG.debug("Account controller initialized.");
     }
@@ -41,5 +49,23 @@ public class AccountController {
         records.add(acct3);
         records.add(acct4);
         return records;
+    }
+
+    // Get Accounts
+    private ArrayList<Account> getAccounts() {
+        ArrayList<Account> records = new ArrayList<Account>();        
+        try {
+			Class.forName("org.postgresql.Driver");
+			Connection conn = DriverManager.getConnection(dbUrl);
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT Id, Name FROM salesforce.account");
+            while(rs.next()) {
+                Account acct1 = AccountConfig.account(rs.getString("Id"), rs.getString("Name"));
+                records.add(acct1);
+            }
+        }catch (Exception ex) {
+
+        }
+        return records;        
     }
 }
