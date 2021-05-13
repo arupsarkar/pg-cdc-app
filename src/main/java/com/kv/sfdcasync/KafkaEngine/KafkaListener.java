@@ -59,17 +59,19 @@ public class KafkaListener implements Managed {
         LOG.info("started");
 
         do {
+            LOG.debug("Starting to poll");
             ConsumerRecords<String, String> records = consumer.poll(Duration.ofMillis(100));
             for (ConsumerRecord<String, String> record : records) {
-                LOG.debug("offset={}, key={}, value={}", record.offset(), record.key(), record.value());
-
+                LOG.debug("---> record value() : ", "offset={}, key={}, value={}", record.offset(), record.key(),
+                        record.value());
+                LOG.debug("---> queue size and capacity", queue.size() + "-" + CAPACITY);
                 while (queue.size() >= CAPACITY) {
                     queue.poll();
                 }
 
                 KafkaMessage message = new KafkaMessage(record.value(), config.getTopic(), record.partition(),
                         record.offset());
-
+                LOG.debug("---> message ", message.getMessage());
                 if (queue.offer(message)) {
                     consumer.commitSync();
                 } else {
