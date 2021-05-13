@@ -13,10 +13,11 @@ public class AccountConfig {
 
     @Bean
     @Scope(BeanDefinition.SCOPE_PROTOTYPE)
-    static Account account(String id, String name) {
+    static Account account(String id, String name, String phone) {
         Account acct = new Account();
         acct.setName(name);
         acct.setId(id);
+        acct.setPhone(phone);
         return acct;
     }
 }

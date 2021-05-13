@@ -76,9 +76,9 @@ public class AccountController {
         try {
             Connection conn = dataSource.getConnection();
             Statement stmt = conn.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT id, name FROM salesforce.account");
+            ResultSet rs = stmt.executeQuery("SELECT id, name, phone FROM salesforce.account");
             while (rs.next()) {
-                Account acct1 = AccountConfig.account(rs.getString("Id"), rs.getString("name"));
+                Account acct1 = AccountConfig.account(rs.getString("Id"), rs.getString("name"), rs.getString("phone"));
                 records.add(acct1);
             }
             rs.close();

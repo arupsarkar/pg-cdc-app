@@ -18,12 +18,14 @@
                     <tr>
                         <th>Id</th>
                         <th>Name</th>
+                        <th>Phone</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr th:each="account: ${accounts}">
                         <td th:text="${account.id}"></td>
                         <td th:text="${account.name}"></td>
+                        <td th:text="${account.phone}"></td>
                     </tr>
                 </tbody>
 
