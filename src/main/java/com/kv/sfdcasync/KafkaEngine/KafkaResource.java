@@ -3,9 +3,12 @@ package com.kv.sfdcasync.KafkaEngine;
 import com.codahale.metrics.annotation.Timed;
 import com.google.common.collect.Lists;
 
+import org.springframework.web.bind.annotation.GetMapping;
+
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.util.List;
+import java.util.Map;
 
 @Path("/")
 public class KafkaResource {
@@ -22,6 +25,23 @@ public class KafkaResource {
     @Timed
     public List<KafkaMessage> getMessages() {
         return Lists.reverse(consumer.getMessages());
+    }
+
+    @GetMapping("/messages")
+    String messages(Map<String, Object> model) {
+        KafkaConfig config = new KafkaConfig();
+        KafkaListener listener = new KafkaListener(config);
+        try {
+            listener.start();
+            List<KafkaMessage> messages = listener.getMessages();
+            for (KafkaMessage message : messages) {
+                model.put("messages", message);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return "kafka/messages";
+
     }
 
 }

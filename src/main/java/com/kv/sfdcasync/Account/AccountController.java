@@ -35,20 +35,6 @@ public class AccountController {
 
     @GetMapping("/account")
     String account(Map<String, ArrayList<Account>> model) {
-
-        KafkaConfig config = new KafkaConfig();
-        KafkaListener listener = new KafkaListener(config);
-        try {
-            listener.start();
-            List<KafkaMessage> messages = listener.getMessages();
-            for (KafkaMessage message : messages) {
-                LOG.debug(" kafka messages : ", message);
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
         ArrayList<Account> records = new ArrayList<Account>();
         records = getAccounts();
         model.put("accounts", records);
