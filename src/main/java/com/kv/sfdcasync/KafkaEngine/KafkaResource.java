@@ -37,10 +37,11 @@ public class KafkaResource {
             for (KafkaMessage message : messages) {
                 model.put("messages", message);
             }
+            return "kafka/messages";
         } catch (Exception e) {
-            e.printStackTrace();
+            model.put("messages", e.getMessage());
+            return "kafka/messages";
         }
-        return "kafka/messages";
 
     }
 
