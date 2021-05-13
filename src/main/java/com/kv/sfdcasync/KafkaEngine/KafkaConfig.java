@@ -22,7 +22,7 @@ import java.net.URISyntaxException;
 public class KafkaConfig {
 
     @NotEmpty
-    private String topic;
+    private String topic = "dynamic_connector_33041.salesforce.account";
 
     // @NotEmpty
     // private String consumerGroup;
