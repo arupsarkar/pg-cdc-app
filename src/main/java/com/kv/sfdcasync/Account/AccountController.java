@@ -24,7 +24,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class AccountController {
     private static final Logger LOG = LoggerFactory.getLogger(AccountController.class);
-    ArrayList<Account> records = new ArrayList<Account>();
 
     @Value("${spring.datasource.url}")
     private String dbUrl;
@@ -33,6 +32,8 @@ public class AccountController {
 
     @GetMapping("/account")
     String account(Map<String, ArrayList<Account>> model) {
+        ArrayList<Account> records = new ArrayList<Account>();
+        records = getAccounts();
         model.put("accounts", records);
         return "account/account";
     }
