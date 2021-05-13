@@ -46,7 +46,7 @@ public class KafkaListener implements Managed {
     private void loop() {
         LOG.info("starting");
         Properties properties = config.getProperties();
-        properties.put(ConsumerConfig.GROUP_ID_CONFIG, config.getConsumerGroup());
+        // properties.put(ConsumerConfig.GROUP_ID_CONFIG, config.getConsumerGroup());
         properties.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, "false");
         properties.put(ConsumerConfig.SESSION_TIMEOUT_MS_CONFIG, "30000");
         properties.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());

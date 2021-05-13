@@ -24,8 +24,8 @@ public class KafkaConfig {
     @NotEmpty
     private String topic;
 
-    @NotEmpty
-    private String consumerGroup;
+    // @NotEmpty
+    // private String consumerGroup;
 
     public Properties getProperties() {
         return buildDefaults();
@@ -82,7 +82,7 @@ public class KafkaConfig {
         return topic;
     }
 
-    public String getConsumerGroup() {
-        return consumerGroup;
-    }
+    // public String getConsumerGroup() {
+    // return consumerGroup;
+    // }
 }

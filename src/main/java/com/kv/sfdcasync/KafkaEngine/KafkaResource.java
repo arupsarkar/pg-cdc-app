@@ -35,7 +35,7 @@ public class KafkaResource {
         ArrayList<String> output = new ArrayList<String>();
         KafkaConfig config = new KafkaConfig();
         output.add("topic - " + config.getTopic());
-        output.add("consumer group - " + config.getConsumerGroup());
+        // output.add("consumer group - " + config.getConsumerGroup());
 
         KafkaListener listener = new KafkaListener(config);
         output.add("listener - " + listener.toString());

@@ -1,0 +1,9 @@
+logging:
+  level: INFO
+
+  loggers:
+    com.kv.sfdcasync: DEBUG
+
+kafka:
+  topic: ${KAFKA_PREFIX}dynamic_connector_33041.salesforce.account
+  # consumerGroup: ${KAFKA_PREFIX}demo-group
