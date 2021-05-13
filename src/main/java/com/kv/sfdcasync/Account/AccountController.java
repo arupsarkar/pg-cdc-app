@@ -57,11 +57,11 @@ public class AccountController {
     // Create Accounts
     private ArrayList<Account> createAccounts() {
         ArrayList<Account> records = new ArrayList<Account>();
-        Account acct1 = AccountConfig.account("1", "Acme Corp.");
-        Account acct2 = AccountConfig.account("2", "Gene Corp.");
+        Account acct1 = AccountConfig.account("1", "Acme Corp.", "phone # 2");
+        Account acct2 = AccountConfig.account("2", "Gene Corp.", "phone # 2");
         acct2 = AccountService.updateAccountName(acct2);
-        Account acct3 = AccountConfig.account("3", "Sally Corp.");
-        Account acct4 = AccountConfig.account("4", "Bag Corp.");
+        Account acct3 = AccountConfig.account("3", "Sally Corp.", "phone # 3");
+        Account acct4 = AccountConfig.account("4", "Bag Corp.", "phone # 4");
         acct4 = AccountService.updateAccountName(acct4);
         records.add(acct1);
         records.add(acct2);
@@ -108,3 +108,4 @@ public class AccountController {
     }
 
 }
+// https://devcenter.heroku.com/articles/deploying-spring-boot-apps-to-heroku
