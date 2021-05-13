@@ -10,7 +10,7 @@ import com.google.common.collect.Lists;
 
 import org.apache.kafka.clients.CommonClientConfigs;
 import org.apache.kafka.common.config.SslConfigs;
-import org.hibernate.validator.constraints.NotEmpty;
+// import org.hibernate.validator.constraints.NotEmpty;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static java.lang.String.format;
 import static java.lang.System.getenv;
@@ -21,7 +21,7 @@ import java.net.URISyntaxException;
 
 public class KafkaConfig {
 
-    @NotEmpty
+    // @NotEmpty
     private String topic = "dynamic_connector_33041.salesforce.account";
 
     // @NotEmpty
