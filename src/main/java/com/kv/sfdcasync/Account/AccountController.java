@@ -92,11 +92,15 @@ public class AccountController {
 
     @Bean
     public DataSource dataSource() throws SQLException {
+        LOG.debug("dataSource 1 : ", "Initializing....." + dbUrl);
         if (dbUrl == null || dbUrl.isEmpty()) {
+            LOG.debug("dataSource 2 : ", "dbUrl is empty");
             return new HikariDataSource();
         } else {
+            LOG.debug("dataSource 3 : ", "dbUrl is not empty");
             HikariConfig config = new HikariConfig();
             config.setJdbcUrl(dbUrl);
+            LOG.debug("dataSource 4 jdbc url : ", config.getJdbcUrl());
             return new HikariDataSource(config);
         }
     }
