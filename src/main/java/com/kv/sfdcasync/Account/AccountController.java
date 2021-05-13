@@ -25,9 +25,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class AccountController {
     private static final Logger LOG = LoggerFactory.getLogger(AccountController.class);
     ArrayList<Account> records = new ArrayList<Account>();
-    @Value("${spring.datasource.url")
-    private static String dbUrl;
-    private Connection conn;
+
+    @Value("${spring.datasource.url}")
+    private String dbUrl;
+    @Autowired
+    private DataSource dataSource;
 
     @GetMapping("/account")
     String account(Map<String, ArrayList<Account>> model) {
@@ -39,15 +41,14 @@ public class AccountController {
         LOG.debug("Initiating account controller.");
         LOG.debug("Fetching account records");
         try {
-            Class.forName("org.postgresql.Driver");
-            this.conn = DriverManager.getConnection(dbUrl);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
+            // Class.forName("org.postgresql.Driver");
+            // this.conn = dataSource.getConnection();
+            this.records = getAccounts();
+        } catch (Exception e) {
             e.printStackTrace();
         }
         // this.records = createAccounts();
-        this.records = getAccounts();
+
         LOG.debug("Total accoun records fetched", this.records.size());
         LOG.debug("Account controller initialized.");
     }
@@ -72,8 +73,8 @@ public class AccountController {
     private ArrayList<Account> getAccounts() {
         ArrayList<Account> records = new ArrayList<Account>();
         try {
-            // Connection conn = dataSource.getConnection();
-            Statement stmt = this.conn.createStatement();
+            Connection conn = dataSource.getConnection();
+            Statement stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery("SELECT id, name FROM salesforce.account");
             while (rs.next()) {
                 Account acct1 = AccountConfig.account(rs.getString("Id"), rs.getString("name"));
@@ -87,6 +88,17 @@ public class AccountController {
             LOG.debug("Debug", ex.getMessage());
         }
         return records;
+    }
+
+    @Bean
+    public DataSource dataSource() throws SQLException {
+        if (dbUrl == null || dbUrl.isEmpty()) {
+            return new HikariDataSource();
+        } else {
+            HikariConfig config = new HikariConfig();
+            config.setJdbcUrl(dbUrl);
+            return new HikariDataSource(config);
+        }
     }
 
 }
