@@ -5,14 +5,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 import javax.sql.DataSource;
 
-import com.kv.sfdcasync.KafkaEngine.KafkaConfig;
-import com.kv.sfdcasync.KafkaEngine.KafkaListener;
-import com.kv.sfdcasync.KafkaEngine.KafkaMessage;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
