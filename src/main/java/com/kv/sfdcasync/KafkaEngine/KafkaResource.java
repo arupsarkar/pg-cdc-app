@@ -39,8 +39,8 @@ public class KafkaResource {
             }
             return "kafka/messages";
         } catch (Exception e) {
-            model.put("messages", e.getMessage());
-            return "kafka/messages";
+            model.put("message", e.getMessage());
+            return "error";
         }
 
     }
