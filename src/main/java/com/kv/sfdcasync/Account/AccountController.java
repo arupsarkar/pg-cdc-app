@@ -44,13 +44,13 @@ public class AccountController {
         try {
             // Class.forName("org.postgresql.Driver");
             // this.conn = dataSource.getConnection();
-            this.records = getAccounts();
+            // this.records = getAccounts();
         } catch (Exception e) {
             e.printStackTrace();
         }
         // this.records = createAccounts();
 
-        LOG.debug("Total accoun records fetched", this.records.size());
+        // LOG.debug("Total accoun records fetched", this.records.size());
         LOG.debug("Account controller initialized.");
     }
 
@@ -83,6 +83,7 @@ public class AccountController {
             }
             rs.close();
             stmt.close();
+
         } catch (Exception ex) {
             String error = ex.getLocalizedMessage();
             LOG.error("Error", error);
