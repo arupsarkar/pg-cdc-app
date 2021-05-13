@@ -1,7 +1,6 @@
 package com.kv.sfdcasync.Account;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -15,6 +14,7 @@ import com.zaxxer.hikari.HikariDataSource;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Controller;
@@ -24,8 +24,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class AccountController {
     private static final Logger LOG = LoggerFactory.getLogger(AccountController.class);
     ArrayList<Account> records = new ArrayList<Account>();
-	@Value("${spring.datasource.url")
-	private String dbUrl;    
+    @Value("${spring.datasource.url")
+    private static String dbUrl;
+
+    @Autowired
+    private DataSource dataSource;
 
     @GetMapping("/account")
     String account(Map<String, ArrayList<Account>> model) {
@@ -36,7 +39,7 @@ public class AccountController {
     public AccountController() {
         LOG.debug("Initiating account controller.");
         LOG.debug("Fetching account records");
-        //this.records = createAccounts();
+        // this.records = createAccounts();
         this.records = getAccounts();
         LOG.debug("Total accoun records fetched", this.records.size());
         LOG.debug("Account controller initialized.");
@@ -60,28 +63,28 @@ public class AccountController {
 
     // Get Accounts
     private ArrayList<Account> getAccounts() {
-        ArrayList<Account> records = new ArrayList<Account>();        
+        ArrayList<Account> records = new ArrayList<Account>();
         try {
-			Connection conn = dataSource().getConnection();
+            Connection conn = dataSource.getConnection();
             Statement stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery("SELECT id, name FROM salesforce.account");
-            while(rs.next()) {
+            while (rs.next()) {
                 Account acct1 = AccountConfig.account(rs.getString("Id"), rs.getString("name"));
                 records.add(acct1);
             }
             rs.close();
             stmt.close();
-        }catch (Exception ex) {
+        } catch (Exception ex) {
             String error = ex.getLocalizedMessage();
             LOG.error("Error", error);
             LOG.debug("Debug", ex.getMessage());
         }
-        return records;        
+        return records;
     }
 
     @Bean
-    public DataSource dataSource() throws SQLException {
-        if(dbUrl == null || dbUrl.isEmpty()) {
+    static DataSource dataSource() throws SQLException {
+        if (dbUrl == null || dbUrl.isEmpty()) {
             return new HikariDataSource();
         } else {
             HikariConfig config = new HikariConfig();
