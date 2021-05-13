@@ -1,15 +1,18 @@
 package com.kv.sfdcasync.Account;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import javax.sql.DataSource;
 
+import com.kv.sfdcasync.KafkaEngine.KafkaConfig;
+import com.kv.sfdcasync.KafkaEngine.KafkaListener;
+import com.kv.sfdcasync.KafkaEngine.KafkaMessage;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
@@ -32,6 +35,20 @@ public class AccountController {
 
     @GetMapping("/account")
     String account(Map<String, ArrayList<Account>> model) {
+
+        KafkaConfig config = new KafkaConfig();
+        KafkaListener listener = new KafkaListener(config);
+        try {
+            listener.start();
+            List<KafkaMessage> messages = listener.getMessages();
+            for (KafkaMessage message : messages) {
+                LOG.debug(" kafka messages : ", message);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         ArrayList<Account> records = new ArrayList<Account>();
         records = getAccounts();
         model.put("accounts", records);
@@ -54,21 +71,21 @@ public class AccountController {
         LOG.debug("Account controller initialized.");
     }
 
-    // Create Accounts
-    private ArrayList<Account> createAccounts() {
-        ArrayList<Account> records = new ArrayList<Account>();
-        Account acct1 = AccountConfig.account("1", "Acme Corp.", "phone # 2");
-        Account acct2 = AccountConfig.account("2", "Gene Corp.", "phone # 2");
-        acct2 = AccountService.updateAccountName(acct2);
-        Account acct3 = AccountConfig.account("3", "Sally Corp.", "phone # 3");
-        Account acct4 = AccountConfig.account("4", "Bag Corp.", "phone # 4");
-        acct4 = AccountService.updateAccountName(acct4);
-        records.add(acct1);
-        records.add(acct2);
-        records.add(acct3);
-        records.add(acct4);
-        return records;
-    }
+    // // Create Accounts
+    // private ArrayList<Account> createAccounts() {
+    // ArrayList<Account> records = new ArrayList<Account>();
+    // Account acct1 = AccountConfig.account("1", "Acme Corp.", "phone # 2");
+    // Account acct2 = AccountConfig.account("2", "Gene Corp.", "phone # 2");
+    // acct2 = AccountService.updateAccountName(acct2);
+    // Account acct3 = AccountConfig.account("3", "Sally Corp.", "phone # 3");
+    // Account acct4 = AccountConfig.account("4", "Bag Corp.", "phone # 4");
+    // acct4 = AccountService.updateAccountName(acct4);
+    // records.add(acct1);
+    // records.add(acct2);
+    // records.add(acct3);
+    // records.add(acct4);
+    // return records;
+    // }
 
     // Get Accounts
     private ArrayList<Account> getAccounts() {
