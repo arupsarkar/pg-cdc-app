@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -30,14 +32,20 @@ public class KafkaResource {
 
     @GetMapping("/messages")
     String messages(Map<String, Object> model) {
+        ArrayList<String> output = new ArrayList<String>();
         KafkaConfig config = new KafkaConfig();
+        output.add("topic - " + config.getTopic());
+        output.add("consumer group - " + config.getConsumerGroup());
+
         KafkaListener listener = new KafkaListener(config);
+        output.add("listener - " + listener.toString());
         try {
             listener.start();
             List<KafkaMessage> messages = listener.getMessages();
             for (KafkaMessage message : messages) {
-                model.put("messages", message.getMessage());
+                output.add(message.getMessage());
             }
+            model.put("messages", output);
             return "kafka/messages";
         } catch (Exception e) {
             model.put("message", e.getMessage());
