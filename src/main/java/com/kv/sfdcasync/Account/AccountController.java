@@ -1,6 +1,7 @@
 package com.kv.sfdcasync.Account;
 
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -26,9 +27,7 @@ public class AccountController {
     ArrayList<Account> records = new ArrayList<Account>();
     @Value("${spring.datasource.url")
     private static String dbUrl;
-
-    // @Autowired
-    private DataSource dataSource;
+    private Connection conn;
 
     @GetMapping("/account")
     String account(Map<String, ArrayList<Account>> model) {
@@ -40,8 +39,11 @@ public class AccountController {
         LOG.debug("Initiating account controller.");
         LOG.debug("Fetching account records");
         try {
-            this.dataSource = dataSource();
+            Class.forName("org.postgresql.Driver");
+            this.conn = DriverManager.getConnection(dbUrl);
         } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
         // this.records = createAccounts();
@@ -70,8 +72,8 @@ public class AccountController {
     private ArrayList<Account> getAccounts() {
         ArrayList<Account> records = new ArrayList<Account>();
         try {
-            Connection conn = dataSource.getConnection();
-            Statement stmt = conn.createStatement();
+            // Connection conn = dataSource.getConnection();
+            Statement stmt = this.conn.createStatement();
             ResultSet rs = stmt.executeQuery("SELECT id, name FROM salesforce.account");
             while (rs.next()) {
                 Account acct1 = AccountConfig.account(rs.getString("Id"), rs.getString("name"));
@@ -85,17 +87,6 @@ public class AccountController {
             LOG.debug("Debug", ex.getMessage());
         }
         return records;
-    }
-
-    // @Bean
-    static DataSource dataSource() throws SQLException {
-        if (dbUrl == null || dbUrl.isEmpty()) {
-            return new HikariDataSource();
-        } else {
-            HikariConfig config = new HikariConfig();
-            config.setJdbcUrl(dbUrl);
-            return new HikariDataSource(config);
-        }
     }
 
 }
