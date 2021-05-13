@@ -20,6 +20,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicBoolean;
 import static java.util.Collections.singletonList;
 
+import java.time.Duration;
+
 public class KafkaListener implements Managed {
     private static final Logger LOG = LoggerFactory.getLogger(KafkaListener.class);
     private static final int CAPACITY = 10;
@@ -57,7 +59,7 @@ public class KafkaListener implements Managed {
         LOG.info("started");
 
         do {
-            ConsumerRecords<String, String> records = consumer.poll(100);
+            ConsumerRecords<String, String> records = consumer.poll(Duration.ofMillis(100));
             for (ConsumerRecord<String, String> record : records) {
                 LOG.debug("offset={}, key={}, value={}", record.offset(), record.key(), record.value());
 
