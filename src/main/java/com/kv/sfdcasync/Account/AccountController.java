@@ -27,7 +27,7 @@ public class AccountController {
     @Value("${spring.datasource.url")
     private static String dbUrl;
 
-    @Autowired
+    // @Autowired
     private DataSource dataSource;
 
     @GetMapping("/account")
@@ -39,6 +39,11 @@ public class AccountController {
     public AccountController() {
         LOG.debug("Initiating account controller.");
         LOG.debug("Fetching account records");
+        try {
+            this.dataSource = dataSource();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         // this.records = createAccounts();
         this.records = getAccounts();
         LOG.debug("Total accoun records fetched", this.records.size());
@@ -82,7 +87,7 @@ public class AccountController {
         return records;
     }
 
-    @Bean
+    // @Bean
     static DataSource dataSource() throws SQLException {
         if (dbUrl == null || dbUrl.isEmpty()) {
             return new HikariDataSource();
