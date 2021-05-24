@@ -60,7 +60,7 @@ public class KafkaListener implements Managed {
         do {
             try {
                 consumer = new KafkaConsumer<>(properties);
-                consumer.subscribe(singletonList(config.getTopic()));
+                // consumer.subscribe(singletonList(config.getTopic()));
                 LOG.info("---> consumer started ");
             } catch (Exception ex) {
                 LOG.error("---> Error ", ex.getMessage());
