@@ -11,6 +11,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -63,7 +65,7 @@ public class KafkaListener implements Managed {
                 // consumer.subscribe(singletonList(config.getTopic()));
                 String topic = "dynamic_connector_33041.salesforce.account";
                 LOG.debug("---> kafka topic name : " + topic);
-                consumer.subscribe(Arrays.asList(topic));
+                consumer.subscribe(Collections.singletonList(topic));
                 LOG.info("---> consumer started ");
             } catch (Exception ex) {
                 LOG.error("---> Error ", ex.getMessage());
