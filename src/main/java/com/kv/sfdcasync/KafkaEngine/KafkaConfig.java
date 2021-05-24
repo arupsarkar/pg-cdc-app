@@ -43,9 +43,9 @@ public class KafkaConfig {
     // @NotEmpty
     // private String consumerGroup;
 
-    // public Properties getProperties() {
-    // return buildDefaults();
-    // }
+    public Map<String, Object> getProperties() {
+        return buildDefaults();
+    }
 
     private Map<String, Object> buildDefaults() {
         // Properties properties = new Properties();

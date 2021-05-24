@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 import java.util.Queue;
 import java.util.concurrent.ArrayBlockingQueue;
@@ -47,7 +48,7 @@ public class KafkaListener implements Managed {
 
     private void loop() {
         LOG.info("starting");
-        Properties properties = config.getProperties();
+        Map<String, Object> properties = config.getProperties();
         // properties.put(ConsumerConfig.GROUP_ID_CONFIG, config.getConsumerGroup());
         properties.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, "false");
         properties.put(ConsumerConfig.SESSION_TIMEOUT_MS_CONFIG, "30000");
