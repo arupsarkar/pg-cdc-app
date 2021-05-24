@@ -62,7 +62,7 @@ public class KafkaListener implements Managed {
                 consumer = new KafkaConsumer<>(properties);
                 // consumer.subscribe(singletonList(config.getTopic()));
                 String topic = "dynamic_connector_33041.salesforce.account";
-                LOG.debug("---> kafka topic name : ", topic);
+                LOG.debug("---> kafka topic name : " + topic);
                 consumer.subscribe(Arrays.asList(topic));
                 LOG.info("---> consumer started ");
             } catch (Exception ex) {
