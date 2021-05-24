@@ -49,6 +49,7 @@ public class KafkaListener implements Managed {
     private void loop() {
         LOG.info("starting");
         Map<String, Object> properties = config.getProperties();
+        printMessages(properties);
         // properties.put(ConsumerConfig.GROUP_ID_CONFIG, config.getConsumerGroup());
         properties.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, "false");
         properties.put(ConsumerConfig.SESSION_TIMEOUT_MS_CONFIG, "30000");
@@ -100,6 +101,14 @@ public class KafkaListener implements Managed {
         List<KafkaMessage> messages = Lists.newArrayList();
         queue.iterator().forEachRemaining(messages::add);
         return messages;
+    }
+
+    private void printMessages(Map<String, Object> messages) {
+        for (String s : messages.keySet()) {
+            LOG.debug("---> key " + s);
+            Object obj = messages.get(s);
+            LOG.debug("---> value " + obj.toString());
+        }
     }
 
 }
