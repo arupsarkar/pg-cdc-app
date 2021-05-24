@@ -50,7 +50,6 @@ public class KafkaListener implements Managed {
     private void loop() {
         LOG.info("---> starting");
         Map<String, Object> properties = config.getProperties();
-        printMessages(properties);
         // properties.put(ConsumerConfig.GROUP_ID_CONFIG, config.getConsumerGroup());
         properties.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, "false");
         properties.put(ConsumerConfig.SESSION_TIMEOUT_MS_CONFIG, "30000");
@@ -62,7 +61,7 @@ public class KafkaListener implements Managed {
             try {
                 consumer = new KafkaConsumer<>(properties);
                 // consumer.subscribe(singletonList(config.getTopic()));
-                String topic = config.getTopic();
+                String topic = "dynamic_connector_33041.salesforce.account";
                 LOG.debug("---> kafka topic name : ", topic);
                 consumer.subscribe(Arrays.asList(topic));
                 LOG.info("---> consumer started ");
