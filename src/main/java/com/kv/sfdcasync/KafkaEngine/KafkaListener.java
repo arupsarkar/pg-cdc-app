@@ -10,6 +10,7 @@ import org.apache.kafka.common.serialization.StringDeserializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -61,6 +62,8 @@ public class KafkaListener implements Managed {
             try {
                 consumer = new KafkaConsumer<>(properties);
                 // consumer.subscribe(singletonList(config.getTopic()));
+
+                consumer.subscribe(Arrays.asList(config.getTopic()));
                 LOG.info("---> consumer started ");
             } catch (Exception ex) {
                 LOG.error("---> Error ", ex.getMessage());
