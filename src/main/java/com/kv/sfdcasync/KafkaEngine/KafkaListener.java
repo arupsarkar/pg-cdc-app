@@ -47,7 +47,7 @@ public class KafkaListener implements Managed {
     }
 
     private void loop() {
-        LOG.info("starting");
+        LOG.info("---> starting");
         Map<String, Object> properties = config.getProperties();
         printMessages(properties);
         // properties.put(ConsumerConfig.GROUP_ID_CONFIG, config.getConsumerGroup());
@@ -55,13 +55,13 @@ public class KafkaListener implements Managed {
         properties.put(ConsumerConfig.SESSION_TIMEOUT_MS_CONFIG, "30000");
         properties.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
         properties.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
-
+        printMessages(properties);
         consumer = new KafkaConsumer<>(properties);
         consumer.subscribe(singletonList(config.getTopic()));
-        LOG.info("started");
+        LOG.info("---> consumer started ");
 
         do {
-            LOG.debug("Starting to poll");
+            LOG.debug("---> Starting to poll");
             ConsumerRecords<String, String> records = consumer.poll(Duration.ofMillis(100));
             for (ConsumerRecord<String, String> record : records) {
                 LOG.debug("---> record value() : ", "offset={}, key={}, value={}", record.offset(), record.key(),
@@ -82,7 +82,7 @@ public class KafkaListener implements Managed {
             }
         } while (running.get());
 
-        LOG.info("closing consumer");
+        LOG.info("---> closing consumer");
         consumer.close();
         stopLatch.countDown();
     }
