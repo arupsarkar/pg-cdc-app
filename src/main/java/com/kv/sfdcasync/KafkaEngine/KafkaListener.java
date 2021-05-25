@@ -79,6 +79,8 @@ public class KafkaListener implements Managed {
                 LOG.debug("---> records empty");
             } else {
                 for (ConsumerRecord<String, String> record : records) {
+                    LOG.debug("---> record value " + record.value());
+                    LOG.debug("---> record key " + record.key());
                     LOG.debug("---> record value() : ", "offset={}, key={}, value={}", record.offset(), record.key(),
                             record.value());
                     LOG.debug("---> queue size and capacity", queue.size() + "-" + CAPACITY);
