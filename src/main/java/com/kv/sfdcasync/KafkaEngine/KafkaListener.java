@@ -61,19 +61,18 @@ public class KafkaListener implements Managed {
         properties.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
         properties.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
         printMessages(properties);
+        try {
+            consumer = new KafkaConsumer<>(properties);
+            // consumer.subscribe(singletonList(config.getTopic()));
+            String topic = config.getTopic();
+            LOG.debug("---> kafka topic name : " + topic);
+            consumer.subscribe(Collections.singletonList(topic));
+            LOG.info("---> consumer started ");
+        } catch (Exception ex) {
+            LOG.error("---> Error ", ex.getMessage());
+        }
 
         do {
-            try {
-                consumer = new KafkaConsumer<>(properties);
-                // consumer.subscribe(singletonList(config.getTopic()));
-                String topic = config.getTopic();
-                LOG.debug("---> kafka topic name : " + topic);
-                consumer.subscribe(Collections.singletonList(topic));
-                LOG.info("---> consumer started ");
-            } catch (Exception ex) {
-                LOG.error("---> Error ", ex.getMessage());
-            }
-
             LOG.debug("---> Starting to poll");
             ConsumerRecords<String, String> records = consumer.poll(Duration.ofMillis(20000));
             if (records.isEmpty()) {
