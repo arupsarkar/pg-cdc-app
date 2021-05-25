@@ -52,6 +52,7 @@ public class KafkaListener implements Managed {
     }
 
     private void loop() {
+        printSystemProperties();
         LOG.info("---> starting");
         Properties properties = config.getProperties();
         properties.put(ConsumerConfig.GROUP_ID_CONFIG, "xyz");
@@ -125,6 +126,15 @@ public class KafkaListener implements Managed {
         for (String key : keys) {
             LOG.debug(key + " : " + messages.getProperty(key));
         }
+    }
+
+    private void printSystemProperties() {
+        LOG.debug("-------------- print system environments : start ---------------");
+        Map<String, String> map = System.getenv();
+        for (String key : map.keySet()) {
+            LOG.debug(key + " : " + map.get(key));
+        }
+        LOG.debug("-------------- print system environments : end ---------------");
     }
 
 }
