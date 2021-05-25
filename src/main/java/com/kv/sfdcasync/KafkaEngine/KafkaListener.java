@@ -74,24 +74,29 @@ public class KafkaListener implements Managed {
             }
 
             LOG.debug("---> Starting to poll");
-            ConsumerRecords<String, String> records = consumer.poll(Duration.ofMillis(10000));
-            for (ConsumerRecord<String, String> record : records) {
-                LOG.debug("---> record value() : ", "offset={}, key={}, value={}", record.offset(), record.key(),
-                        record.value());
-                LOG.debug("---> queue size and capacity", queue.size() + "-" + CAPACITY);
-                while (queue.size() >= CAPACITY) {
-                    queue.poll();
-                }
+            ConsumerRecords<String, String> records = consumer.poll(Duration.ofMillis(20000));
+            if (records.isEmpty()) {
+                LOG.debug("---> records empty");
+            } else {
+                for (ConsumerRecord<String, String> record : records) {
+                    LOG.debug("---> record value() : ", "offset={}, key={}, value={}", record.offset(), record.key(),
+                            record.value());
+                    LOG.debug("---> queue size and capacity", queue.size() + "-" + CAPACITY);
+                    while (queue.size() >= CAPACITY) {
+                        queue.poll();
+                    }
 
-                KafkaMessage message = new KafkaMessage(record.value(), config.getTopic(), record.partition(),
-                        record.offset());
-                LOG.debug("---> message ", message.getMessage());
-                if (queue.offer(message)) {
-                    consumer.commitSync();
-                } else {
-                    LOG.error("Failed to track message: {}", message);
+                    KafkaMessage message = new KafkaMessage(record.value(), config.getTopic(), record.partition(),
+                            record.offset());
+                    LOG.debug("---> message ", message.getMessage());
+                    if (queue.offer(message)) {
+                        consumer.commitSync();
+                    } else {
+                        LOG.error("Failed to track message: {}", message);
+                    }
                 }
             }
+
         } while (running.get());
 
         LOG.info("---> closing consumer");
