@@ -13,10 +13,12 @@ import org.slf4j.LoggerFactory;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Enumeration;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Queue;
+import java.util.Set;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
@@ -51,7 +53,7 @@ public class KafkaListener implements Managed {
 
     private void loop() {
         LOG.info("---> starting");
-        Map<String, Object> properties = config.getProperties();
+        Properties properties = config.getProperties();
         // properties.put(ConsumerConfig.GROUP_ID_CONFIG, config.getConsumerGroup());
         properties.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, "false");
         properties.put(ConsumerConfig.SESSION_TIMEOUT_MS_CONFIG, "30000");
@@ -113,11 +115,10 @@ public class KafkaListener implements Managed {
         return messages;
     }
 
-    private void printMessages(Map<String, Object> messages) {
-        for (String s : messages.keySet()) {
-            LOG.debug("---> key " + s);
-            Object obj = messages.get(s);
-            LOG.debug("---> value " + obj.toString());
+    private void printMessages(Properties messages) {
+        Set<String> keys = messages.stringPropertyNames();
+        for (String key : keys) {
+            LOG.debug(key + " : " + messages.getProperty(key));
         }
     }
 

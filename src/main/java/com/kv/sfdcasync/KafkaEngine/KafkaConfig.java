@@ -43,13 +43,13 @@ public class KafkaConfig {
     // @NotEmpty
     // private String consumerGroup;
 
-    public Map<String, Object> getProperties() {
+    public Properties getProperties() {
         return buildDefaults();
     }
 
-    private Map<String, Object> buildDefaults() {
-        // Properties properties = new Properties();
-        Map<String, Object> properties = new HashMap<>();
+    private Properties buildDefaults() {
+        Properties properties = new Properties();
+        // Map<String, Object> properties = new HashMap<>();
         List<String> hostPorts = Lists.newArrayList();
 
         for (String url : Splitter.on(",").split(checkNotNull(getenv("KAFKA_URL")))) {
@@ -101,21 +101,28 @@ public class KafkaConfig {
 
     @Bean
     public ProducerFactory<String, String> producerFactory() {
-        Map<String, Object> config = buildDefaults();
+        Properties config = buildDefaults();
 
         config.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
         config.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
-
-        return new DefaultKafkaProducerFactory<>(config);
+        Map<String, Object> elements = new HashMap<String, Object>();
+        for (String key : config.stringPropertyNames()) {
+            elements.put(key, config.getProperty(key));
+        }
+        return new DefaultKafkaProducerFactory<>(elements);
     }
 
     @Bean
     public ConsumerFactory<String, String> consumerFactory() {
-        Map<String, Object> config = buildDefaults();
+        Properties config = buildDefaults();
         // config.put(ConsumerConfig.GROUP_ID_CONFIG, "xyz");
         config.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
         config.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
-        return new DefaultKafkaConsumerFactory<>(config);
+        Map<String, Object> elements = new HashMap<String, Object>();
+        for (String key : config.stringPropertyNames()) {
+            elements.put(key, config.getProperty(key));
+        }
+        return new DefaultKafkaConsumerFactory<>(elements);
     }
 
     @Bean
