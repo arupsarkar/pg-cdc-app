@@ -74,7 +74,7 @@ public class KafkaListener implements Managed {
             }
 
             LOG.debug("---> Starting to poll");
-            ConsumerRecords<String, String> records = consumer.poll(Duration.ofMillis(100));
+            ConsumerRecords<String, String> records = consumer.poll(Duration.ofMillis(10000));
             for (ConsumerRecord<String, String> record : records) {
                 LOG.debug("---> record value() : ", "offset={}, key={}, value={}", record.offset(), record.key(),
                         record.value());
