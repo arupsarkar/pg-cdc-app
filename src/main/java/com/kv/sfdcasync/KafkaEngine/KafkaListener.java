@@ -81,7 +81,9 @@ public class KafkaListener implements Managed {
                 for (ConsumerRecord<String, String> record : records) {
                     LOG.debug("---> record value " + record.value());
                     LOG.debug("---> record key " + record.key());
-                    LOG.debug("---> record value() : ", "offset={}, key={}, value={}", record.offset(), record.key(),
+                    LOG.debug("---> record offset " + record.offset());
+                    LOG.debug("---> record string " + record.toString());
+                    LOG.debug("---> record value() : " + "offset={}, key={}, value={}" + record.offset(), record.key(),
                             record.value());
                     LOG.debug("---> queue size and capacity", queue.size() + "-" + CAPACITY);
                     while (queue.size() >= CAPACITY) {
@@ -90,7 +92,7 @@ public class KafkaListener implements Managed {
 
                     KafkaMessage message = new KafkaMessage(record.value(), config.getTopic(), record.partition(),
                             record.offset());
-                    LOG.debug("---> message ", message.getMessage());
+                    LOG.debug("---> kafka message " + message.getMessage());
                     if (queue.offer(message)) {
                         consumer.commitSync();
                     } else {
