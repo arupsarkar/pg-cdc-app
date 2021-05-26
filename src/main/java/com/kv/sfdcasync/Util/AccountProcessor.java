@@ -14,6 +14,7 @@ public class AccountProcessor {
     private static Gson gson = new Gson();
 
     public static void processIncomingMessage(KafkaMessage message) {
+        LOG.debug("---> processing start -----");
         String json = message.toString();
         JsonObject body = gson.fromJson(json, JsonObject.class);
         JsonArray payload = body.get("payload").getAsJsonArray();
@@ -26,6 +27,6 @@ public class AccountProcessor {
         JsonElement phone = result.get("phone");
         JsonElement sfid = result.get("sfid");
         LOG.debug("---> account name: " + name + ", phone: " + phone + ", sfid: " + sfid);
-
+        LOG.debug("---> processing end -----");
     }
 }
