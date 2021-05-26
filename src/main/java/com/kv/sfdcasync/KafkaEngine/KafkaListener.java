@@ -15,6 +15,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import com.google.common.collect.Lists;
+import com.kv.sfdcasync.Util.AccountProcessor;
 
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
@@ -84,7 +85,8 @@ public class KafkaListener implements Managed {
 
                     KafkaMessage message = new KafkaMessage(record.value(), topic.get(0), record.partition(),
                             record.offset());
-                    LOG.debug("---> kafka message " + message.getMessage());
+                    // LOG.debug("---> kafka message " + message.getMessage());
+                    AccountProcessor.processIncomingMessage(message);
                     if (queue.offer(message)) {
                         consumer.commitSync();
                     } else {
