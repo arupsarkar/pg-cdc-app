@@ -1,5 +1,6 @@
 package com.kv.sfdcasync.KafkaEngine;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -95,8 +96,10 @@ public class KafkaConfig {
         return properties;
     }
 
-    public String getTopic() {
-        return topic;
+    public ArrayList<String> getTopic() {
+        List<String> topics = new ArrayList<>();
+        topics.add(topic);
+        return (ArrayList<String>) topics;
     }
 
     @Bean

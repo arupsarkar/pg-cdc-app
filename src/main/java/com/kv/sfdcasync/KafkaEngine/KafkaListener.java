@@ -6,10 +6,12 @@ import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
+import org.apache.kafka.common.internals.Topic;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -36,7 +38,7 @@ public class KafkaListener implements Managed {
     private final AtomicBoolean running = new AtomicBoolean();
     private CountDownLatch stopLatch;
     private KafkaConsumer<String, String> consumer;
-
+    private List<String> topic = new ArrayList<String>();
     private final Queue<KafkaMessage> queue = new ArrayBlockingQueue<>(CAPACITY);
 
     public KafkaListener(KafkaConfig config) {
@@ -64,9 +66,9 @@ public class KafkaListener implements Managed {
         try {
             consumer = new KafkaConsumer<>(properties);
             // consumer.subscribe(singletonList(config.getTopic()));
-            String topic = config.getTopic();
+            topic = config.getTopic();
             LOG.debug("---> kafka topic name : " + topic);
-            consumer.subscribe(Collections.singletonList(topic));
+            consumer.subscribe(Collections.singletonList(topic.get(0)));
             LOG.info("---> consumer started ");
         } catch (Exception ex) {
             LOG.error("---> Error ", ex.getMessage());
@@ -79,18 +81,12 @@ public class KafkaListener implements Managed {
                 LOG.debug("---> records empty");
             } else {
                 for (ConsumerRecord<String, String> record : records) {
-                    LOG.debug("---> record value " + record.value());
-                    LOG.debug("---> record key " + record.key());
-                    LOG.debug("---> record offset " + record.offset());
-                    LOG.debug("---> record string " + record.toString());
-                    LOG.debug("---> record value() : " + "offset={}, key={}, value={}" + record.offset(), record.key(),
-                            record.value());
-                    LOG.debug("---> queue size and capacity", queue.size() + "-" + CAPACITY);
+                    LOG.debug("---> queue size and capacity : " + queue.size() + "-" + CAPACITY);
                     while (queue.size() >= CAPACITY) {
                         queue.poll();
                     }
 
-                    KafkaMessage message = new KafkaMessage(record.value(), config.getTopic(), record.partition(),
+                    KafkaMessage message = new KafkaMessage(record.value(), topic.get(0), record.partition(),
                             record.offset());
                     LOG.debug("---> kafka message " + message.getMessage());
                     if (queue.offer(message)) {
