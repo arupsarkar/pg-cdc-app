@@ -1,17 +1,11 @@
 package com.kv.sfdcasync.KafkaEngine;
 
-import com.codahale.metrics.annotation.Timed;
-import com.google.common.collect.Lists;
-
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-
-import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
 public class KafkaResource {

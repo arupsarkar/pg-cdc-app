@@ -139,7 +139,4 @@ public class KafkaConfig {
     public KafkaTemplate<String, String> kafkaTemplate() {
         return new KafkaTemplate<>(producerFactory());
     }
-    // public String getConsumerGroup() {
-    // return consumerGroup;
-    // }
 }
